@@ -1,4 +1,3 @@
-import { timeStamp } from "console";
 import {
   pgTable,
   text,
@@ -23,7 +22,7 @@ export const user = pgTable("user", {
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-export const session = pgTable("sesion", {
+export const session = pgTable("session", {
     id: uuid("id").primaryKey().defaultRandom(),
     expiresAt: timestamp("expires_at").notNull(),
     token: text("token").notNull().unique(),
