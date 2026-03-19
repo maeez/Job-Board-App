@@ -55,6 +55,7 @@ export default function NewJobPage() {
                   name="description"
                   placeholder="Describe the role, responsibilities, and requirements..."
                   rows={4}
+                  required
                 />
               </div>
 
@@ -105,7 +106,8 @@ export default function NewJobPage() {
                   name="requiredLanguages"
                   placeholder="e.g. English, Hindi"
                   required
-                />
+                  pattern="[a-zA-Z, ]+"
+                  title="Only letters and commas allowed" />
                 <p className="text-xs text-muted-foreground">Comma separated</p>
               </div>
 
