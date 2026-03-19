@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 
+
 export async function createJob(formData: FormData) {
   const session = await getServerSession();
 
@@ -17,7 +18,7 @@ export async function createJob(formData: FormData) {
   const description = formData.get("description") as string;
   const country = formData.get("country") as string;
   const compensationCurrency = formData.get("compensationCurrency") as string;
-  const compensationAmount = parseInt(formData.get("compensationAmount") as string);
+  const compensationAmount = Number(formData.get("compensationAmount") as string);
   const jobType = formData.get("jobType") as "in-office" | "remote" | "hybrid";
   const requiredSkills = (formData.get("requiredSkills") as string).split(",").map(s => s.trim()).filter(Boolean);
   const requiredLanguages = (formData.get("requiredLanguages") as string).split(",").map(l => l.trim()).filter(Boolean);

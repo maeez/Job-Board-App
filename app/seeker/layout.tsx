@@ -10,6 +10,6 @@ export default async function SeekerLayout({children}: {children: React.ReactNod
   if (session.user.role !== "seeker") redirect("/poster/dashboard");
 
   return <>
-  <Navbar/>
+  <Navbar session={session}/>
   {children}</>;
 }

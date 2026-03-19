@@ -1,9 +1,15 @@
 import Link from "next/link";
 import LogoutButton from "./logout-button";
-import { getServerSession } from "@/lib/session";
+import type { Session } from "@/lib/auth";
 
-export default async function Navbar() {
-  const session = await getServerSession();
+
+ 
+
+interface props{
+  session: Session
+}
+export default async function Navbar({session}:props) {
+  
 
   return (
     <nav className="border-b bg-background sticky top-0 z-10">

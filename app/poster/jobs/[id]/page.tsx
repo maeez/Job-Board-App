@@ -4,6 +4,8 @@ import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import Loading from "./loading";
 
 type Applicant = {
   applicationId: string;
@@ -31,13 +33,12 @@ export default function JobApplicantsPage() {
     },
   });
 
-  if (isLoading) {
-    return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <p className="text-muted-foreground">Loading applicants...</p>
-      </div>
-    );
-  }
+   if (isLoading) {
+  return (
+    <Loading/>
+    
+  );
+}
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">

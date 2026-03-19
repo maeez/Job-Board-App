@@ -12,7 +12,7 @@ export default async function PosterLayout({
   if (!session) redirect("/login");
   if (session.user.role !== "poster") redirect("/seeker/feed");
   return <>
-    <Navbar />
+    <Navbar session={session} />
    {children}
    </>;
 }
