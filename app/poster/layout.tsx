@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "@/lib/session";
+import Navbar from "@/components/navbar";
 
 export default async function PosterLayout({
   children,
@@ -10,5 +11,8 @@ export default async function PosterLayout({
 
   if (!session) redirect("/login");
   if (session.user.role !== "poster") redirect("/seeker/feed");
-  return <>{children}</>;
+  return <>
+    <Navbar />
+   {children}
+   </>;
 }

@@ -45,21 +45,6 @@ export default function SeekerFeedPage() {
 
   return (
     <div className="min-h-screen bg-muted/40">
-
-      <div className="border-b bg-background sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
-          <span className="text-sm font-medium">Job Board</span>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/seeker/profile/setup"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Edit profile
-            </Link>
-          </div>
-        </div>
-      </div>
-
       <div className="max-w-5xl mx-auto px-6 py-10">
 
         <div className="mb-8">
