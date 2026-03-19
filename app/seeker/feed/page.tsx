@@ -18,10 +18,11 @@ export default function SeekerFeedPage() {
     getAppliedJobIds().then(setAppliedIds);
   }, []);
 
-  const { data: jobs, isLoading } = useQuery({
+  const { data: jobs, isError, isLoading } = useQuery({
     queryKey: ["seeker-jobs"],
     queryFn: async () => {
       const res = await fetch("/api/seeker/jobs");
+      if (res.status === 404) throw new Error("NO_PROFILE");
       if (!res.ok) throw new Error("Failed to fetch jobs");
       return res.json() as Promise<Job[]>;
     },
@@ -54,7 +55,20 @@ export default function SeekerFeedPage() {
           </p>
         </div>
 
-        {isLoading ? (
+       
+          {isError ? (
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-24 text-center">
+              <p className="text-lg font-medium mb-1">Profile not set up</p>
+              <p className="text-sm text-muted-foreground mb-4">
+                Complete your profile to start seeing matched jobs.
+              </p>
+              <Button asChild>
+                <Link href="/seeker/profile/setup">Set up profile</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        ) : isLoading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
               <Card key={i}>
