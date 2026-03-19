@@ -15,7 +15,7 @@ export async function createOrUpdateSeekerProfile(formData: FormData) {
   const country = formData.get("country") as string;
   const jobPreference = formData.get("jobPreference") as "in-office" | "remote" | "hybrid";
   const compensationCurrency = formData.get("compensationCurrency") as string;
-  const expectedCompensation = parseInt(formData.get("expectedCompensation") as string);
+  const expectedCompensation = Number(formData.get("expectedCompensation") as string);
   const languages = (formData.get("languages") as string).split(",").map((l) => l.trim()).filter(Boolean);
   const skills = (formData.get("skills") as string).split(",").map((s) => s.trim()).filter(Boolean);
 
@@ -51,8 +51,9 @@ export async function createOrUpdateSeekerProfile(formData: FormData) {
     });
   }
 
-  revalidatePath("/seeker/feed");
-  redirect("/seeker/feed");
+revalidatePath("/seeker/feed");
+revalidatePath("/seeker/profile/setup");
+redirect("/seeker/feed");
 }
 
 export async function getSeekerProfile() {
