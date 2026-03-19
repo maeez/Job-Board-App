@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import SeekerCountryCurrencySelect from "@/components/country-currency-select";
+import CountryCurrencySelect  from "@/components/country-currency-select";
 
 export default async function ProfileSetupPage() {
   const [session, profile] = await Promise.all([
@@ -35,7 +35,7 @@ export default async function ProfileSetupPage() {
           <CardContent>
             <form action={createOrUpdateSeekerProfile} className="space-y-6">
 
-              <SeekerCountryCurrencySelect />
+              <CountryCurrencySelect  key={`${profile?.country}-${profile?.compensationCurrency}`} defaultCountry={profile?.country} defaultCurrency={profile?.compensationCurrency}/>
 
               <div className="space-y-2">
                 <Label htmlFor="jobPreference">Job preference</Label>
@@ -90,7 +90,7 @@ export default async function ProfileSetupPage() {
                 <p className="text-xs text-muted-foreground">Comma separated</p>
               </div>
 
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full p-6">
                 {profile ? "Update profile" : "Save and continue →"}
               </Button>
 
