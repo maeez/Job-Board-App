@@ -6,7 +6,7 @@ export default function Loading() {
     <div className="max-w-4xl mx-auto px-4 py-8">
       <Skeleton className="h-8 w-36 mb-6" />
       <div className="space-y-4">
-        {[1, 2, 3].map((i) => (
+        {[1, 2, 3,4,5,6].map((i) => (
           <Card key={i}>
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between">
@@ -18,16 +18,17 @@ export default function Loading() {
             <CardContent>
               <div className="flex items-center gap-4 mb-3">
                 <Skeleton className="h-4 w-10" />
-                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-20" />
               </div>
               <div className="space-y-2">
                 <div className="flex gap-2 flex-wrap">
                   <Skeleton className="h-5 w-12" />
                   <Skeleton className="h-5 w-16" />
-                  <Skeleton className="h-5 w-20" />
+                  <Skeleton className="h-5 w-16" />
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   <Skeleton className="h-5 w-16" />
+                  <Skeleton className="h-5 w-14" />
                   <Skeleton className="h-5 w-14" />
                 </div>
               </div>
