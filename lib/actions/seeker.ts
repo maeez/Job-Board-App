@@ -53,7 +53,6 @@ export async function createOrUpdateSeekerProfile(formData: FormData) {
 
 revalidatePath("/seeker/feed");
 revalidatePath("/seeker/profile/setup");
-redirect("/seeker/feed");
 }
 
 export async function getSeekerProfile() {
