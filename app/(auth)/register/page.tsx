@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { UserRole } from "@/types";
 import Link from "next/link";
+import Spinner from "@/components/spinner";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -16,7 +17,9 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState<UserRole>("seeker");
 
-  async function handleSubmit(formData: FormData) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget) ;
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
@@ -74,8 +77,7 @@ export default function RegisterPage() {
             </button>
           </div>
 
-          <form
-            action= {handleSubmit}
+          <form onSubmit={handleSubmit}
             className="space-y-4"
           >
             <div className=" bg space-y-2">
@@ -88,7 +90,8 @@ export default function RegisterPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" type="password" placeholder="••••••••" required minLength={8} />
+              <Input id="password" name="password" type="password" placeholder="••••••••" required minLength={8} pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$"
+                title="Password must be at least 8 characters and include at least one uppercase letter, one number, and one symbol" />
             </div>
 
             {error && (
@@ -96,7 +99,16 @@ export default function RegisterPage() {
             )}
 
             <Button type="submit" className="w-full text-lg p-6" disabled={loading}>
-              {loading ? "Creating account..." : "Create account"}
+
+                {loading ? (<span className="flex items-center gap-2">
+                                  <Spinner />
+                                 Creating account...
+                                </span>
+                              ) : (
+                                "Create account"
+                              )}
+
+
             </Button>
           </form>
 
