@@ -66,13 +66,13 @@ export default function JobApplicantsPage() {
                 </div>
                 <div className="space-y-2">
                   <div className="flex gap-2 flex-wrap">
-                    <span className="text-xs font-medium">Skills:</span>
+                    <span className="text-xs font-medium mt-0.5">Skills:</span>
                     {applicant.skills.map((skill) => (
                       <Badge key={skill} variant="outline">{skill}</Badge>
                     ))}
                   </div>
                   <div className="flex gap-2 flex-wrap">
-                    <span className="text-xs font-medium">Languages:</span>
+                    <span className="text-xs font-medium mt-0.5">Languages:</span>
                     {applicant.languages.map((lang) => (
                       <Badge key={lang} variant="secondary">{lang}</Badge>
                     ))}

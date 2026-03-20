@@ -51,7 +51,7 @@ export default async function PosterDashboard() {
                     <Badge key={skill} variant="outline">{skill}</Badge>
                   ))}
                 </div>
-                <Button asChild variant="outline" size="sm">
+                <Button className="bg-gray-950" asChild variant="default" size="sm">
                   <Link href={`/poster/jobs/${job.id}`}>View applicants</Link>
                 </Button>
               </CardContent>
