@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { job, seekerProfile } from "@/lib/schema";
-import { eq } from "drizzle-orm";
+import { and, eq, gte } from "drizzle-orm";
 import { getServerSession } from "@/lib/session";
 
 export async function GET() {
@@ -23,21 +23,18 @@ export async function GET() {
 
   const seeker = profile[0];
 
-  const allJobs = await db.select().from(job);
+  const allJobs = await db.select().from(job).where(
+    and( gte(job.compensationAmount, seeker.expectedCompensation),eq(job.country,seeker.country))
+   
+  );
 
   const matchingJobs = allJobs.filter((j) => {
-    const countryMatch = j.country === seeker.country;
 
     const languageMatch = j.requiredLanguages.every((lang) =>
       seeker.languages.map((l) => l.toLowerCase()).includes(lang.toLowerCase())
     );
 
-    const compensationMatch =
-      j.compensationCurrency === seeker.compensationCurrency
-        ? Number(j.compensationAmount) >= seeker.expectedCompensation
-        : false;
-
-    return countryMatch && languageMatch && compensationMatch;
+    return  languageMatch 
   });
 
   return NextResponse.json(matchingJobs);

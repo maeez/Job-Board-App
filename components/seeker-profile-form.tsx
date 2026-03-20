@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CountryCurrencySelect from "@/components/country-currency-select";
 import { createOrUpdateSeekerProfile } from "@/lib/actions/seeker";
 import type { SeekerProfile } from "@/types";
+import { useState } from "react";
+import Spinner from "./spinner";
 
 interface Props  {
   profile: SeekerProfile | null;
@@ -18,14 +20,17 @@ interface Props  {
 export default function SeekerProfileForm({ profile, userName }: Props) {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit( e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setLoading(true);
     const formData = new  FormData(e.currentTarget)
     await createOrUpdateSeekerProfile(formData);
     queryClient.removeQueries({ queryKey: ["seeker-jobs"] });
     router.push("/seeker/feed");
     router.refresh();
+    setLoading(false);
   }
 
   return (
@@ -106,9 +111,16 @@ export default function SeekerProfileForm({ profile, userName }: Props) {
                     <p className="text-xs text-muted-foreground">Comma separated</p>
                   </div>
     
-                  <Button type="submit" className="w-full p-6">
-                    {profile ? "Update profile" : "Save and continue →"}
-                  </Button>
+            <Button type="submit" className="w-full p-6" disabled={loading}>
+                    {loading ? (
+                  <span className="flex items-center gap-2">
+                    <Spinner />
+                    Saving...
+                  </span>
+                    ) : (
+                  profile ? "Update profile" : "Save and continue →"
+                  )}
+            </Button>
     
                 </form>
               </CardContent>
