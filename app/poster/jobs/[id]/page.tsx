@@ -4,8 +4,9 @@ import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import Loading from "./loading";
+import Link from "next/link";
 
 type Applicant = {
   applicationId: string;
@@ -33,12 +34,9 @@ export default function JobApplicantsPage() {
     },
   });
 
-   if (isLoading) {
-  return (
-    <Loading/>
-    
-  );
-}
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -62,22 +60,38 @@ export default function JobApplicantsPage() {
               <CardContent>
                 <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
                   <span>{applicant.country}</span>
-                  <span>{applicant.compensationCurrency} {applicant.expectedCompensation.toLocaleString()}</span>
+                  <span>
+                    {applicant.compensationCurrency}{" "}
+                    {applicant.expectedCompensation.toLocaleString()}
+                  </span>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2 mb-4">
                   <div className="flex gap-2 flex-wrap">
                     <span className="text-xs font-medium mt-0.5">Skills:</span>
                     {applicant.skills.map((skill) => (
                       <Badge key={skill} variant="outline">{skill}</Badge>
                     ))}
                   </div>
-                  <div className="flex gap-2 flex-wrap">
+                  <div className="flex justify-between">
+                  <div className="flex gap-2 flex-wrap mt-2">
                     <span className="text-xs font-medium mt-0.5">Languages:</span>
                     {applicant.languages.map((lang) => (
                       <Badge key={lang} variant="secondary">{lang}</Badge>
                     ))}
                   </div>
+                   <div className="">
+                  <Button className="p-4 bg-gray-950" variant="default" size="sm" asChild>
+                    <Link href={`/poster/jobs/${id}/applicants/${applicant.seekerId}`}>
+                      View profile →
+                    </Link>
+                  </Button>
                 </div>
+                </div>
+
+
+
+                </div>
+               
               </CardContent>
             </Card>
           ))}
