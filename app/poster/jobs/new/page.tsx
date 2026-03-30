@@ -60,11 +60,11 @@ export default function NewJobPage() {
               </div>
 
               <CountryCurrencySelect />
-            <div className="flex justify-between">
-              <div className="space-y-2">
+          <div className="flex justify-between gap-4">
+              <div className="space-y-2 flex-1">
                 <Label htmlFor="jobType">Job type</Label>
                 <Select name="jobType" required>
-                  <SelectTrigger id="jobType">
+                  <SelectTrigger className="w-full" id="jobType">
                     <SelectValue placeholder="Select job type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -75,7 +75,7 @@ export default function NewJobPage() {
                 </Select>
               </div>
 
-              <div className="space-y-2 w-43 md:w-78.25 items-center rounded-md ">
+              <div className="space-y-2 flex-1 items-center rounded-md ">
                 <Label htmlFor="compensationAmount">Compensation per year</Label>
                 <Input
                   id="compensationAmount"
@@ -84,9 +84,12 @@ export default function NewJobPage() {
                   placeholder="e.g. 80000"
                   min={0}
                   required
+                  className="w-full"
+                  
                 />
               </div>
             </div>
+
 
               <div className="space-y-2">
                 <Label htmlFor="requiredSkills">Required skills</Label>

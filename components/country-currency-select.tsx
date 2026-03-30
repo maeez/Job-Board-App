@@ -75,7 +75,7 @@ export default function CountryCurrencySelect({
 
       <div className="space-y-2">
         <Label htmlFor="compensationCurrency">Compensation currency</Label>
-        <div className="flex h-9 w-full items-center rounded-md border border-input bg-muted px-3 text-sm text-muted-foreground">
+        <div className="flex h-8 w-full items-center rounded-md border border-input bg-muted px-3 text-sm text-muted-foreground">
           {currency || "Auto-filled from country"}
         </div>
         <input type="hidden" name="compensationCurrency" value={currency} />
