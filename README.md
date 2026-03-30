@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Job Board
+
+A full-stack job board application built with Next.js. The platform connects job seekers with job posters through a smart matching system based on location, language requirements, and compensation expectations.
+
+## Overview
+
+The application supports two types of users. Job posters can create an account, post job listings, and review applicants. Job seekers can create an account, set up a profile, browse jobs matched to their profile, and apply to listings they are interested in.
+
+
+## Tech Stack
+
+- **Framework:** Next.js 16 with App Router
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS and shadcn/ui
+- **Database:** PostgreSQL via Neon
+- **ORM:** Drizzle ORM
+- **Authentication:** Better Auth
+- **Data Fetching:** TanStack Query
+
+## Project Structure
+
+```
+app/
+  (auth)/           # Login and register pages
+  poster/           # All poster pages and layouts
+  seeker/           # All seeker pages and layouts
+  api/              # API routes
+lib/
+  actions/          # Server actions for poster and seeker
+  auth.ts           # Better Auth server configuration
+  auth-client.ts    # Better Auth browser client
+  db.ts             # Database connection
+  schema.ts         # Database schema definitions
+  session.ts        # Server session helper
+components/
+  ui/               # shadcn/ui components
+  navbar.tsx        # Shared navigation bar
+  logout-button.tsx # Client logout button
+  providers.tsx     # TanStack Query provider
+types/
+  index.ts          # Shared TypeScript types
+```
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18 or higher
+- pnpm
+- A Neon database account
+
+### Installation
+
+Clone the repository and install dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a `.env.local` file in the root of the project with the following variables:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+DATABASE_URL=your_neon_connection_string
+BETTER_AUTH_SECRET=your_random_secret_string
+BETTER_AUTH_URL=http://localhost:3000
+NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3000
+```
 
-## Learn More
+### Database Setup
 
-To learn more about Next.js, take a look at the following resources:
+Push the schema to your database:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm db:push
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Development
 
-## Deploy on Vercel
+Start the development server:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The application will be available at `http://localhost:3000`.
+
+### Other Database Commands
+
+```bash
+pnpm db:generate   # Generate migration files
+pnpm db:migrate    # Run migrations
+pnpm db:studio     # Open Drizzle Studio to view your database
+```
