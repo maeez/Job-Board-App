@@ -12,11 +12,11 @@ import type { Job } from "@/types";
 
 export default function SeekerFeedPage() {
   const queryClient = useQueryClient();
-  const [appliedIds, setAppliedIds] = useState<string[]>([]);
-
-  useEffect(() => {
-    getAppliedJobIds().then(setAppliedIds);
-  }, []);
+ 
+   const { data: appliedIds = [] } = useQuery({
+  queryKey: ["applied-ids"],
+  queryFn: () => getAppliedJobIds(),
+  });
 
   const { data: jobs, isError, isLoading } = useQuery({
     queryKey: ["seeker-jobs"],
@@ -39,7 +39,7 @@ export default function SeekerFeedPage() {
       return jobId;
     },
     onSuccess: (jobId) => {
-      setAppliedIds((prev) => [...prev, jobId]);
+      queryClient.invalidateQueries({ queryKey: ["applied-ids"] });
       queryClient.invalidateQueries({ queryKey: ["seeker-jobs"] });
     },
   });
