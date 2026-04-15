@@ -5,7 +5,7 @@ import { seekerProfile, job, application } from "@/lib/schema";
 import { getServerSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { eq, and } from "drizzle-orm";
+import { and, eq, gte  } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 
 export async function createOrUpdateSeekerProfile(formData: FormData) {
@@ -105,4 +105,40 @@ export async function getAppliedJobIds() {
     .where(eq(application.seekerId, session.user.id));
 
   return applications.map((a) => a.jobId);
+}
+
+export async function getSeekerFeed() {
+  const session = await getServerSession();
+
+  if (!session || session.user.role !== "seeker") {
+   redirect("/login");
+  }
+
+  const profile = await db
+    .select()
+    .from(seekerProfile)
+    .where(eq(seekerProfile.userId, session.user.id))
+    .limit(1);
+
+  if (!profile[0]) {
+    redirect("/seeker/profile/setup");
+  }
+
+  const seeker = profile[0];
+
+  const allJobs = await db.select().from(job).where(
+    and( gte(job.compensationAmount, seeker.expectedCompensation),eq(job.country,seeker.country))
+    
+  );
+
+  const matchingJobs = allJobs.filter((j) => {
+
+    const languageMatch = j.requiredLanguages.every((lang) =>
+      seeker.languages.map((l) => l.toLowerCase()).includes(lang.toLowerCase())
+    );
+
+    return  languageMatch 
+  });
+
+  return matchingJobs;
 }

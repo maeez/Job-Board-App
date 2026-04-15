@@ -7,15 +7,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Loading from "./loading";
 import Link from "next/link";
+import { getApplicantsForAJob } from "@/lib/actions/poster";
 
 type Applicant = {
   applicationId: string;
-  appliedAt: string;
+  appliedAt: Date;
   seekerId: string;
   seekerName: string;
   seekerEmail: string;
   country: string;
-  jobPreference: string;
+  jobPreference: "in-office" | "remote" | "hybrid";
   compensationCurrency: string;
   expectedCompensation: number;
   languages: string[];
@@ -25,22 +26,31 @@ type Applicant = {
 export default function JobApplicantsPage() {
   const { id } = useParams<{ id: string }>();
 
-  const { data: applicants, isLoading } = useQuery({
+  const { data: applicants, isLoading, isError } = useQuery<Applicant[]>({
     queryKey: ["applicants", id],
-    queryFn: async () => {
-      const res = await fetch(`/api/poster/jobs/${id}/applicants`);
-      if (!res.ok) throw new Error("Failed to fetch applicants");
-      return res.json() as Promise<Applicant[]>;
-    },
+    queryFn: () => getApplicantsForAJob(id),
   });
 
-  if (isLoading) {
-    return <Loading />;
+  if (isLoading) return <Loading />;
+
+  if (isError) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8 text-center text-destructive">
+        <p>Failed to load applicants. Please try again.</p>
+      </div>
+    );
   }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-semibold mb-6">Applicants</h1>
+      <h1 className="text-2xl font-semibold mb-6">
+        Applicants{" "}
+        {applicants && applicants.length > 0 && (
+          <span className="text-muted-foreground text-lg font-normal">
+            ({applicants.length})
+          </span>
+        )}
+      </h1>
 
       {!applicants || applicants.length === 0 ? (
         <div className="text-center py-16 text-muted-foreground">
@@ -48,50 +58,54 @@ export default function JobApplicantsPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {applicants.map((applicant) => (
+          {applicants.map((applicant: Applicant) => (
             <Card key={applicant.applicationId}>
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between">
-                  <CardTitle className="text-lg">{applicant.seekerName}</CardTitle>
+                  <div>
+                    <CardTitle className="text-lg">{applicant.seekerName}</CardTitle>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      {applicant.seekerEmail}
+                    </p>
+                  </div>
                   <Badge variant="secondary">{applicant.jobPreference}</Badge>
                 </div>
-                <p className="text-sm text-muted-foreground">{applicant.seekerEmail}</p>
               </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
-                  <span>{applicant.country}</span>
+
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <span> {applicant.country}</span>
                   <span>
-                    {applicant.compensationCurrency}{" "}
+                     {applicant.compensationCurrency}{" "}
                     {applicant.expectedCompensation.toLocaleString()}
                   </span>
                 </div>
-                <div className="space-y-2 mb-4">
-                  <div className="flex gap-2 flex-wrap">
-                    <span className="text-xs font-medium mt-0.5">Skills:</span>
-                    {applicant.skills.map((skill) => (
-                      <Badge key={skill} variant="outline">{skill}</Badge>
+
+                <div className="flex flex-wrap gap-1.5 items-center">
+                  <span className="text-xs font-medium text-muted-foreground">Skills:</span>
+                  {applicant.skills.map((skill: string) => (
+                    <Badge key={skill} variant="outline" className="text-xs">
+                      {skill}
+                    </Badge>
+                  ))}
+                </div>
+
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex flex-wrap gap-1.5 items-center">
+                    <span className="text-xs font-medium text-muted-foreground">Languages:</span>
+                    {applicant.languages.map((lang: string) => (
+                      <Badge key={lang} variant="secondary" className="text-xs">
+                        {lang}
+                      </Badge>
                     ))}
                   </div>
-                  <div className="flex justify-between">
-                  <div className="flex gap-2 flex-wrap mt-2">
-                    <span className="text-xs font-medium mt-0.5">Languages:</span>
-                    {applicant.languages.map((lang) => (
-                      <Badge key={lang} variant="secondary">{lang}</Badge>
-                    ))}
-                  </div>
-                   <div className="">
-                  <Button className="p-4 bg-gray-950" variant="default" size="sm" asChild>
+
+                  <Button variant="default" size="sm" asChild className="shrink-0">
                     <Link href={`/poster/jobs/${id}/applicants/${applicant.seekerId}`}>
                       View profile →
                     </Link>
                   </Button>
                 </div>
-                </div>
-
-
-
-                </div>
-               
               </CardContent>
             </Card>
           ))}

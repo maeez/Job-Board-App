@@ -1,17 +1,15 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAppliedJobIds } from "@/lib/actions/seeker";
-import { useEffect, useState } from "react";
+import { applyToJob, getAppliedJobIds, getSeekerFeed } from "@/lib/actions/seeker";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
-import type { Job } from "@/types";
 
 export default function SeekerFeedPage() {
-  const queryClient = useQueryClient();
+ 
  
    const { data: appliedIds = [] } = useQuery({
   queryKey: ["applied-ids"],
@@ -20,22 +18,16 @@ export default function SeekerFeedPage() {
 
   const { data: jobs, isError, isLoading } = useQuery({
     queryKey: ["seeker-jobs"],
-    queryFn: async () => {
-      const res = await fetch("/api/seeker/jobs");
-      if (res.status === 404) throw new Error("NO_PROFILE");
-      if (!res.ok) throw new Error("Failed to fetch jobs");
-      return res.json() as Promise<Job[]>;
-    },
+    queryFn: () => getSeekerFeed()
+   
   });
+   const queryClient = useQueryClient();
 
   const applyMutation = useMutation({
+    
     mutationFn: async (jobId: string) => {
-      const res = await fetch("/api/seeker/apply", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ jobId }),
-      });
-      if (!res.ok) throw new Error("Failed to apply");
+       await applyToJob(jobId);
+     
       return jobId;
     },
     onSuccess: (jobId) => {

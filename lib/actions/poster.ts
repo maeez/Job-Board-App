@@ -1,12 +1,13 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { job } from "@/lib/schema";
+import { application, job, seekerProfile, user } from "@/lib/schema";
 import { getServerSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
+import { NextResponse } from "next/server";
 
 
 export async function createJob(formData: FormData) {
@@ -47,4 +48,33 @@ export async function getPosterJobs() {
   const jobs = await db.select().from(job).where(eq(job.posterId, session.user.id)).orderBy(job.createdAt);
 
   return jobs;
+}
+
+
+export async function getApplicantsForAJob(id: string) {
+  const session = await getServerSession();
+
+  if (!session || session.user.role !== "poster") {
+    throw new Error("Unauthorized");
+  }
+
+  const applicants = await db.select({
+      applicationId: application.id,
+      appliedAt: application.createdAt,
+      seekerId: user.id,
+      seekerName: user.name,
+      seekerEmail: user.email,
+      country: seekerProfile.country,
+      jobPreference: seekerProfile.jobPreference,
+      compensationCurrency: seekerProfile.compensationCurrency,
+      expectedCompensation: seekerProfile.expectedCompensation,
+      languages: seekerProfile.languages,
+      skills: seekerProfile.skills,
+    })
+    .from(application)
+    .innerJoin(user, eq(application.seekerId, user.id))
+    .innerJoin(seekerProfile, eq(application.seekerId, seekerProfile.userId))
+    .where(eq(application.jobId, id));
+
+  return applicants;
 }
